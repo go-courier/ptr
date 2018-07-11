@@ -1,8 +1,9 @@
 package ptr
 
 import (
-	github_com_stretchr_testify_assert "github.com/stretchr/testify/assert"
 	testing "testing"
+
+	github_com_stretchr_testify_assert "github.com/stretchr/testify/assert"
 )
 
 func TestBool(t *testing.T) {

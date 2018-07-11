@@ -1,2 +1,6 @@
+test:
+	vgo test -race ./...
+cover:
+	vgo test -race -coverprofile=coverage.txt -covermode=atomic ./...
 gen:
 	go run __codegen__/main.go
