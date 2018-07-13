@@ -60,7 +60,7 @@ func main() {
 			case "string":
 				file.WriteBlock(funcType.Do(
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						codegen.Val("string"),
 						codegen.Expr("*?", codegen.Call(name, codegen.Val("string"))),
@@ -69,7 +69,7 @@ func main() {
 			case "rune":
 				file.WriteBlock(funcType.Do(
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						codegen.Val('r'),
 						codegen.Expr("*?", codegen.Call(name, codegen.Val('r'))),
@@ -80,7 +80,7 @@ func main() {
 
 				file.WriteBlock(funcType.Do(
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						v,
 						codegen.Expr("*?", codegen.Call(name, v)),
@@ -89,13 +89,13 @@ func main() {
 			case "bool":
 				file.WriteBlock(funcType.Do(
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						codegen.Val(true),
 						codegen.Expr("*?", codegen.Call(name, codegen.Val(true))),
 					),
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						codegen.Val(false),
 						codegen.Expr("*?", codegen.Call(name, codegen.Val(false))),
@@ -104,7 +104,7 @@ func main() {
 			default:
 				file.WriteBlock(funcType.Do(
 					codegen.Call(
-						file.Use("github.com/stretchr/testify/assert", "Equal"),
+						file.Use("github.com/stretchr/testify/require", "Equal"),
 						codegen.Id("t"),
 						codegen.CallWith(basicType, codegen.Val(1)),
 						codegen.Expr("*?", codegen.Call(name, codegen.Val(1))),
