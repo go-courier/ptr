@@ -1,4 +1,6 @@
-test:
+test: generate
 	go test -v -race ./...
-cover:
+cover: generate
 	go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+generate:
+	go generate

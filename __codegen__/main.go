@@ -56,60 +56,34 @@ func main() {
 			funcType := codegen.Func(codegen.Var(codegen.Star(codegen.Type(file.Use("testing", "T"))), "t")).
 				Named("Test" + name)
 
+			asEqual := func(values ...codegen.Snippet) {
+				blocks := make([]codegen.Snippet, len(values))
+
+				for i := range blocks {
+					blocks[i] = codegen.Expr(
+						"?(?).Expect(?).To(?(?))",
+						codegen.Id(file.Use("github.com/onsi/gomega", "NewWithT")),
+						codegen.Id("t"),
+						codegen.CallWith(basicType, values[i]),
+						codegen.Id(file.Use("github.com/onsi/gomega", "Equal")),
+						codegen.Expr("*?", codegen.Call(name, values[i])),
+					)
+				}
+
+				file.WriteBlock(funcType.Do(blocks...))
+			}
+
 			switch basicType {
 			case "string":
-				file.WriteBlock(funcType.Do(
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						codegen.Val("string"),
-						codegen.Expr("*?", codegen.Call(name, codegen.Val("string"))),
-					),
-				))
+				asEqual(codegen.Val("string"))
 			case "rune":
-				file.WriteBlock(funcType.Do(
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						codegen.Val('r'),
-						codegen.Expr("*?", codegen.Call(name, codegen.Val('r'))),
-					),
-				))
+				asEqual(codegen.Val('r'))
 			case "byte":
-				v := codegen.Expr("?[0]", codegen.Val([]byte("bytes")))
-
-				file.WriteBlock(funcType.Do(
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						v,
-						codegen.Expr("*?", codegen.Call(name, v)),
-					),
-				))
+				asEqual(codegen.Expr("?[0]", codegen.Val([]byte("bytes"))))
 			case "bool":
-				file.WriteBlock(funcType.Do(
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						codegen.Val(true),
-						codegen.Expr("*?", codegen.Call(name, codegen.Val(true))),
-					),
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						codegen.Val(false),
-						codegen.Expr("*?", codegen.Call(name, codegen.Val(false))),
-					),
-				))
+				asEqual(codegen.Val(true), codegen.Val(false))
 			default:
-				file.WriteBlock(funcType.Do(
-					codegen.Call(
-						file.Use("github.com/stretchr/testify/require", "Equal"),
-						codegen.Id("t"),
-						codegen.CallWith(basicType, codegen.Val(1)),
-						codegen.Expr("*?", codegen.Call(name, codegen.Val(1))),
-					),
-				))
+				asEqual(codegen.Val(1))
 			}
 
 			file.WriteRune('\n')
